@@ -79,7 +79,7 @@ Pong = {
 
   start: function(numPlayers) {
     if (!this.playing) {
-      this.scores = [0, 0];
+      this.scores = [98, 98];
       this.playing = true;
       this.leftPaddle.setAuto(numPlayers < 1, this.level(0));
       this.rightPaddle.setAuto(numPlayers < 2, this.level(1));
@@ -106,9 +106,9 @@ Pong = {
   goal: function(playerNo) {
     this.sounds.goal();
     this.scores[playerNo] += 1;
-    if (this.scores[playerNo] == 9) {
-      this.menu.declareWinner(playerNo);
-      this.stop();
+    if (this.scores[playerNo] > 99) {
+	this.menu.declareWinner(playerNo);
+	this.stop();
     }
     else {
       this.ball.reset(playerNo);
@@ -267,10 +267,18 @@ Pong = {
 
     draw: function(ctx, scorePlayer1, scorePlayer2) {
       ctx.fillStyle = Pong.Colors.walls;
-      for(var n = 0 ; n < this.walls.length ; n++)
-        ctx.fillRect(this.walls[n].x, this.walls[n].y, this.walls[n].width, this.walls[n].height);
-      this.drawDigit(ctx, scorePlayer1, this.score1.x, this.score1.y, this.score1.w, this.score1.h);
-      this.drawDigit(ctx, scorePlayer2, this.score2.x, this.score2.y, this.score2.w, this.score2.h);
+	for(var n = 0 ; n < this.walls.length ; n++) ctx.fillRect(this.walls[n].x, this.walls[n].y, this.walls[n].width, this.walls[n].height);
+
+
+	
+	var p1 = [Math.floor(scorePlayer1 / 10), scorePlayer1 % 10];
+	var p2 = [Math.floor(scorePlayer2 / 10), scorePlayer2 % 10];
+			
+	this.drawDigit(ctx, p1[1], this.score1.x, this.score1.y, this.score1.w, this.score1.h);
+	this.drawDigit(ctx, p1[0], this.score1.x - 50, this.score1.y, this.score1.w, this.score1.h);
+	
+	this.drawDigit(ctx, p2[0], this.score2.x, this.score2.y, this.score2.w, this.score2.h);
+	this.drawDigit(ctx, p2[1], this.score2.x + 50, this.score2.y, this.score2.w, this.score2.h);
     },
 
     drawDigit: function(ctx, n, x, y, w, h) {
